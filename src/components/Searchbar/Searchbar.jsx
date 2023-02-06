@@ -34,8 +34,7 @@ export class Searchbar extends Component {
   render() {
     const { handleQueryChange, handleSubmit } = this;
     const { search } = this.state;
-    console.log(search);
-
+    
     return (
       <SearchWrap>
         <Form onSubmit={handleSubmit}>

@@ -22,13 +22,11 @@ export class App extends Component {
     if (query !== prevState.query || page !== prevState.page) {
       this.setState({ isLoading: true });
 
-      fetchPhotos(query, page)
-      .then(({data} ) => {
-       
-        console.log(data.hits)
-        if (!data.hits) {
-          toast.error(`This request ${query} is not found`);
-          return;
+      fetchPhotos(query, page).then(({ data }) => {
+        if (!data.hits.length) {
+          return toast.error(`This request ${query} is not found`, {
+            theme: 'colored',
+          });
         }
         this.setState({
           images: [...images, ...data.hits],
@@ -40,7 +38,7 @@ export class App extends Component {
   }
 
   handleFormSubmit = name => {
-    this.setState({query: name, page: 1, images: [], totalHits: 0 });
+    this.setState({ query: name, page: 1, images: [], totalHits: 0 });
   };
 
   onLoadMore = () => {
@@ -51,14 +49,10 @@ export class App extends Component {
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <ToastContainer />
         {this.state.isLoading && <Loader />}
         {this.state.images && <ImageGallery images={this.state.images} />}
-        {this.state.totalHits > 12 && (
-          <>
-            <Button onLoadMore={this.onLoadMore} />
-            <ToastContainer />
-          </>
-        )}
+        {this.state.totalHits > 12 && <Button onLoadMore={this.onLoadMore} />}
       </div>
     );
   }
